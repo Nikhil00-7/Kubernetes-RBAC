@@ -2,23 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: home
-  namespace: default 
+  namespace: default
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: home 
+      app: home
   template:
     metadata:
       labels:
         app: home
     spec:
-      serviceAccountName: myapp   # <-- corrected field
+      serviceAccountName: myapp
+      securityContext:              # ✅ Pod-level securityContext
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
       containers:
-      - name: home
-        image: docdon0007/homeapi
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-        - containerPort: 3000
+        - name: home
+          image: docdon0007/homeapi
+          ports:
+            - containerPort: 3000   # ✅ container field
+          resources:                # ✅ container field
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          securityContext:          # ✅ Container-level securityContext
+            privileged: false
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
