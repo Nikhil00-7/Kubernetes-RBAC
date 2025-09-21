@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home
+  namespace: default 
+spec:
+  selector:
+    matchLabels:
+      app: home 
+  template:
+    metadata:
+      labels:
+        app: home
+    spec:
+      serviceAccountName: myapp   # <-- corrected field
+      containers:
+      - name: home
+        image: docdon0007/homeapi
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
