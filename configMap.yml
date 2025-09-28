@@ -1,0 +1,8 @@
+apiVersion: v1 
+kind: ConfigMap
+metadata:
+  name: all-config
+  namespace: new
+data:
+   MONGO_INITDB_DATABASE: "mydb"
+   MONGO_URLs: "mongodb://root:examplepass@mongodb:27017/mydb?authSource=admin"
