@@ -1,0 +1,38 @@
+# test-app-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app
+  namespace: new
+spec:
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
+      serviceAccountName: test-service
+      containers:
+        - name: test-app
+          image: docdon0007/test:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGO_URLs
+              value: "mongodb://root:examplepass@mongodb:27017/mydb?authSource=admin"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app
+  namespace: new
+spec:
+  selector:
+    app: test-app
+  ports:
+    - port: 3000
+      targetPort: 3000
